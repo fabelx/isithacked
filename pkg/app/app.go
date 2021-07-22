@@ -1,18 +1,53 @@
 package app
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/fabelx/isithacked/pkg/config"
-	"io"
+	"github.com/gocolly/colly"
+	"io/ioutil"
 	"log"
-	"net/http"
 	"regexp"
 )
 
+type Output struct {
+	Title string
+	Data  string
+}
+
 var re *regexp.Regexp
+var outputData []Output
 
-func parseResponse(body []byte) {
+func IsItHacked(target string, output string) {
+	url := fmt.Sprint(config.ServiceURL, target, ".output")
+	c := colly.NewCollector(
+		colly.AllowedDomains("isithacked.com", "www.isithacked.com"),
+	)
+	c.OnHTML("div.col-lg-2:has(img[alt=Xmark])~div", func(el *colly.HTMLElement) {
+		outputData = append(outputData, Output{
+			Title: el.ChildText("h3"),
+			Data:  el.ChildText("p"),
+		})
+	})
 
+	c.OnRequest(func(r *colly.Request) {
+		log.Println("Visiting...", r.URL.String())
+	})
+
+	err := c.Visit(url)
+	if err != nil {
+		log.Fatalf("An error occurred while processing the request. Error: %v", err)
+	}
+
+	file, err := json.MarshalIndent(outputData, "", "  ")
+	if err != nil {
+		log.Fatalf("An error occurred while marshaling data. Error: %v", err)
+	}
+
+	err = ioutil.WriteFile(output, file, 0644)
+	if err != nil {
+		log.Fatalf("An error occurred while writing to file %s. Error: %v", output, err)
+	}
 }
 
 func Run(cfg *config.Config) {
@@ -30,11 +65,5 @@ func Run(cfg *config.Config) {
 		log.Fatal("Invalid target format provided.")
 	}
 
-	resp, err := http.Get(fmt.Sprint(config.ServiceURL, cfg.Target))
-	if err != nil {
-		log.Fatalf("An error occurred while processing the request. Error: %v", err)
-	}
-	defer resp.Body.Close()
-	body, _ := io.ReadAll(resp.Body)
-	parseResponse(body)
+	IsItHacked(cfg.Target, cfg.Output)
 }
