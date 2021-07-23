@@ -6,7 +6,7 @@ import (
 
 const (
 	IpRegex     = `^([0-9]{1,3}\.){3}([0-9]{1,3})$`
-	DomainRegex = `^(?i)[a-z0-9-]+(\.[a-z0-9-]+)+\.?$`
+	DomainRegex = `^(?i)[a-z0-9-]+(\.[a-z0-9-]+)+$`
 	ServiceURL  = "https://www.isithacked.com/check/"
 )
 
