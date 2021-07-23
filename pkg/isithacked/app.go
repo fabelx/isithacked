@@ -1,4 +1,4 @@
-package app
+package isithacked
 
 import (
 	"encoding/json"
@@ -16,7 +16,7 @@ type output struct {
 	Data  string `json:"data"`
 }
 
-func IsItHacked(target, serviceURL string) ([]output, error) {
+func IsItHacked(target string) ([]output, error) {
 	var outputData []output
 	c := colly.NewCollector(
 		colly.AllowedDomains("isithacked.com", "www.isithacked.com"),
@@ -27,12 +27,11 @@ func IsItHacked(target, serviceURL string) ([]output, error) {
 			Data:  el.ChildText("p"),
 		})
 	})
-
 	c.OnRequest(func(r *colly.Request) {
 		log.Println("Visiting...", r.URL.String())
 	})
 
-	err := c.Visit(fmt.Sprint(serviceURL, target, ".output"))
+	err := c.Visit(fmt.Sprint(config.ServiceURL, target, ".output"))
 	if err != nil {
 		return nil, err
 	}
@@ -41,24 +40,24 @@ func IsItHacked(target, serviceURL string) ([]output, error) {
 
 }
 
+func selectRegex(f bool) string {
+	if f {
+		return config.IpRegex
+	}
+	return config.DomainRegex
+}
+
 func Run(cfg *config.Config) {
 	if cfg.Target == "" {
 		log.Fatal("No target specified.")
 	}
 
-	var re *regexp.Regexp
-	if cfg.IsIp {
-		re = regexp.MustCompile(config.IpRegex)
-	} else {
-		re = regexp.MustCompile(config.DomainRegex)
-	}
-
+	re := regexp.MustCompile(selectRegex(cfg.IsIp))
 	if !re.MatchString(cfg.Target) {
 		log.Fatal("Invalid target format provided.")
 	}
 
-	outputData, err := IsItHacked(cfg.Target, cfg.ServiceURL)
-
+	outputData, err := IsItHacked(cfg.Target)
 	if err != nil {
 		log.Fatalf("An error occurred while processing the request. Error: %v", err)
 	}
@@ -72,8 +71,8 @@ func Run(cfg *config.Config) {
 	if len(outputData) == 1 {
 		s = ""
 	}
-	log.Printf("Found %v issue%s!", len(outputData), s)
 
+	log.Printf("Found %v issue%s!", len(outputData), s)
 	file, err := json.MarshalIndent(outputData, "", "  ")
 	if err != nil {
 		log.Fatalf("An error occurred while marshaling data. Error: %v", err)

@@ -17,10 +17,9 @@ var (
 var IsIp bool
 
 type Config struct {
-	IsIp       bool
-	Output     string
-	Target     string
-	ServiceURL string
+	IsIp   bool
+	Output string
+	Target string
 }
 
 func Init() {

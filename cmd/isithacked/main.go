@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/fabelx/isithacked/pkg/app"
 	"github.com/fabelx/isithacked/pkg/config"
+	"github.com/fabelx/isithacked/pkg/isithacked"
 )
 
 func init() {
@@ -11,10 +11,9 @@ func init() {
 
 func main() {
 	cfg := &config.Config{
-		Target:     config.Target,
-		Output:     config.Output,
-		IsIp:       config.IsIp,
-		ServiceURL: config.ServiceURL,
+		Target: config.Target,
+		Output: config.Output,
+		IsIp:   config.IsIp,
 	}
-	app.Run(cfg)
+	isithacked.Run(cfg)
 }
