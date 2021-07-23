@@ -7,12 +7,13 @@ import (
 	"github.com/gocolly/colly"
 	"io/ioutil"
 	"log"
+	"os"
 	"regexp"
 )
 
 type output struct {
-	Title string
-	Data  string
+	Title string `json:"title"`
+	Data  string `json:"data"`
 }
 
 func IsItHacked(target, serviceURL string) ([]output, error) {
@@ -61,6 +62,17 @@ func Run(cfg *config.Config) {
 	if err != nil {
 		log.Fatalf("An error occurred while processing the request. Error: %v", err)
 	}
+
+	if outputData == nil {
+		log.Printf("No issues found for target: %s, Congrats!", cfg.Target)
+		os.Exit(0)
+	}
+
+	var s = "s"
+	if len(outputData) == 1 {
+		s = ""
+	}
+	log.Printf("Found %v issue%s!", len(outputData), s)
 
 	file, err := json.MarshalIndent(outputData, "", "  ")
 	if err != nil {
