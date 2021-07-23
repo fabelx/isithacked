@@ -35,7 +35,7 @@ if err != nil {
 d, _ := json.Marshal(data)
 fmt.Println(string(d))
 ```
-###Cli
+### Cli
 
 ```shell script
 # specify the target (domain), the result, if any, 
