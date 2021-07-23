@@ -10,21 +10,18 @@ import (
 	"regexp"
 )
 
-type Output struct {
+type output struct {
 	Title string
 	Data  string
 }
 
-var re *regexp.Regexp
-var outputData []Output
-
-func IsItHacked(target string, output string) {
-	url := fmt.Sprint(config.ServiceURL, target, ".output")
+func IsItHacked(target, serviceURL string) ([]output, error) {
+	var outputData []output
 	c := colly.NewCollector(
 		colly.AllowedDomains("isithacked.com", "www.isithacked.com"),
 	)
 	c.OnHTML("div.col-lg-2:has(img[alt=Xmark])~div", func(el *colly.HTMLElement) {
-		outputData = append(outputData, Output{
+		outputData = append(outputData, output{
 			Title: el.ChildText("h3"),
 			Data:  el.ChildText("p"),
 		})
@@ -34,20 +31,13 @@ func IsItHacked(target string, output string) {
 		log.Println("Visiting...", r.URL.String())
 	})
 
-	err := c.Visit(url)
+	err := c.Visit(fmt.Sprint(serviceURL, target, ".output"))
 	if err != nil {
-		log.Fatalf("An error occurred while processing the request. Error: %v", err)
+		return nil, err
 	}
 
-	file, err := json.MarshalIndent(outputData, "", "  ")
-	if err != nil {
-		log.Fatalf("An error occurred while marshaling data. Error: %v", err)
-	}
+	return outputData, nil
 
-	err = ioutil.WriteFile(output, file, 0644)
-	if err != nil {
-		log.Fatalf("An error occurred while writing to file %s. Error: %v", output, err)
-	}
 }
 
 func Run(cfg *config.Config) {
@@ -55,6 +45,7 @@ func Run(cfg *config.Config) {
 		log.Fatal("No target specified.")
 	}
 
+	var re *regexp.Regexp
 	if cfg.IsIp {
 		re = regexp.MustCompile(config.IpRegex)
 	} else {
@@ -65,5 +56,19 @@ func Run(cfg *config.Config) {
 		log.Fatal("Invalid target format provided.")
 	}
 
-	IsItHacked(cfg.Target, cfg.Output)
+	outputData, err := IsItHacked(cfg.Target, cfg.ServiceURL)
+
+	if err != nil {
+		log.Fatalf("An error occurred while processing the request. Error: %v", err)
+	}
+
+	file, err := json.MarshalIndent(outputData, "", "  ")
+	if err != nil {
+		log.Fatalf("An error occurred while marshaling data. Error: %v", err)
+	}
+
+	err = ioutil.WriteFile(cfg.Output, file, 0644)
+	if err != nil {
+		log.Fatalf("An error occurred while writing to file %s. Error: %v", cfg.Output, err)
+	}
 }

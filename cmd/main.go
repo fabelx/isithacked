@@ -5,12 +5,16 @@ import (
 	"github.com/fabelx/isithacked/pkg/config"
 )
 
-var cfg *config.Config
-
 func init() {
-	cfg = config.Init()
+	config.Init()
 }
 
 func main() {
+	cfg := &config.Config{
+		Target:     config.Target,
+		Output:     config.Output,
+		IsIp:       config.IsIp,
+		ServiceURL: config.ServiceURL,
+	}
 	app.Run(cfg)
 }

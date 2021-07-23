@@ -17,19 +17,15 @@ var (
 var IsIp bool
 
 type Config struct {
-	IsIp   bool
-	Output string
-	Target string
+	IsIp       bool
+	Output     string
+	Target     string
+	ServiceURL string
 }
 
-func Init() *Config {
+func Init() {
 	flag.StringVar(&Target, "target", "", "Target: ip (1.1.1.1) or domain (example.com)")
 	flag.BoolVar(&IsIp, "ip", false, "Is target an ip?")
 	flag.StringVar(&Output, "output", "output.json", "Path where output will be stored")
 	flag.Parse()
-	return &Config{
-		Target: Target,
-		Output: Output,
-		IsIp:   IsIp,
-	}
 }
