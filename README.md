@@ -1,11 +1,12 @@
 # is-it-hacked
 
 [![Godoc][godoc-image]][godoc-url]
+[![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/udhos/update-golang/blob/master/LICENSE)
 
 A tool using the [IsItHacked.com](https://www.isithacked.com/sites) service that checks if your site is disguised for the GoogleBot, contains spam links, funny redirects, or otherwise looks hacked. Powered by Joomla, Drupal, WordPress, Magento, Prestashop, Laravel, Codeigniter, Symfony or any other server-side technology.
 
 ## Installing
-##### *Go >= 1.16*
+*Go >= 1.16*
 
 To start using IsItHacked, install Go and run `go get`:
 
@@ -13,7 +14,7 @@ To start using IsItHacked, install Go and run `go get`:
 $ go get -u github.com/fabelx/isithacked
 ```
 
-Or install from source using `git`:
+Or install from source via `git`:
 ```shell script
 $ git clone https://github.com/fabelx/isithacked
 $ cd isithacked 
@@ -21,7 +22,7 @@ $ go build ./cmd/isithacked
 ```
 
 ## Usage
-
+### base
 ```go
 // Retrieve data from service
 data, err := isithacked.IsItHacked("example.com")
@@ -35,7 +36,7 @@ if err != nil {
 d, _ := json.Marshal(data)
 fmt.Println(string(d))
 ```
-### Cli
+### cli
 
 ```shell script
 # specify the target (domain), the result, if any, 
