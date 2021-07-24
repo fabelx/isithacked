@@ -49,5 +49,5 @@ $ isithacked -target example.com -output results.json
 $ isithacked -target 127.0.0.1 -ip
 ```
 
-[godoc-image]: https://godoc.org/github.com/akyoto/cache?status.svg
-[godoc-url]: https://godoc.org/github.com/akyoto/cache
+[godoc-image]: https://pkg.go.dev/badge/fabelx/isithacked?utm_source=godoc
+[godoc-url]: https://pkg.go.dev/github.com/fabelx/isithacked
