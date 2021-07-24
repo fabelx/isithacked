@@ -11,18 +11,18 @@ import (
 	"regexp"
 )
 
-type output struct {
+type Output struct {
 	Title string `json:"title"`
 	Data  string `json:"data"`
 }
 
-func IsItHacked(target string) ([]output, error) {
-	var outputData []output
+func IsItHacked(target string) ([]*Output, error) {
+	var outputData []*Output
 	c := colly.NewCollector(
 		colly.AllowedDomains("isithacked.com", "www.isithacked.com"),
 	)
 	c.OnHTML("div.col-lg-2:has(img[alt=Xmark])~div", func(el *colly.HTMLElement) {
-		outputData = append(outputData, output{
+		outputData = append(outputData, &Output{
 			Title: el.ChildText("h3"),
 			Data:  el.ChildText("p"),
 		})
