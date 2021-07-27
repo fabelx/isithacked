@@ -2,6 +2,7 @@
 
 [![Godoc][godoc-image]][godoc-url]
 [![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/udhos/update-golang/blob/master/LICENSE)
+![build](https://github.com/fabelx/isithacked/workflows/Go/badge.svg)
 
 A tool using the [IsItHacked.com](https://www.isithacked.com/sites) service that checks if your site is disguised for the GoogleBot, contains spam links, funny redirects, or otherwise looks hacked. Powered by Joomla, Drupal, WordPress, Magento, Prestashop, Laravel, Codeigniter, Symfony or any other server-side technology.
 
