@@ -13,6 +13,7 @@ To start using IsItHacked, install Go and run `go get`:
 
 ```sh
 $ go get -u github.com/fabelx/isithacked
+$ go install github.com/fabelx/isithacked/cmd/isithacked@`VERSION`
 ```
 
 Or install from source via `git`:
