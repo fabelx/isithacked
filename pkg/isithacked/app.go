@@ -40,30 +40,23 @@ func IsItHacked(target string) ([]*Output, error) {
 
 }
 
-func selectRegex(f bool) string {
-	if f {
-		return config.IpRegex
-	}
-	return config.DomainRegex
-}
-
 func Run(cfg *config.Config) {
-	if cfg.Target == "" {
+	if cfg.Domain == "" {
 		log.Fatal("No target specified.")
 	}
 
-	re := regexp.MustCompile(selectRegex(cfg.IsIp))
-	if !re.MatchString(cfg.Target) {
+	re := regexp.MustCompile(config.DomainRegex)
+	if !re.MatchString(cfg.Domain) {
 		log.Fatal("Invalid target format provided.")
 	}
 
-	outputData, err := IsItHacked(cfg.Target)
+	outputData, err := IsItHacked(cfg.Domain)
 	if err != nil {
 		log.Fatalf("An error occurred while processing the request. Error: %v", err)
 	}
 
 	if outputData == nil {
-		log.Printf("No issues found for target: %s, Congrats!", cfg.Target)
+		log.Printf("No issues found for target: %s, Congrats!", cfg.Domain)
 		os.Exit(0)
 	}
 

@@ -25,6 +25,13 @@ $ go build ./cmd/isithacked
 ## Usage
 ### base
 ```go
+package somepackage
+
+// Import
+import (
+    "github.com/fabelx/isithacked/pkg/isithacked"
+)
+
 // Retrieve data from service
 data, err := isithacked.IsItHacked("example.com")
 
@@ -46,9 +53,6 @@ $ isithacked -target example.com
 
 # specify the target (domain) and result file name
 $ isithacked -target example.com -output results.json
-
-# specify the target (ip_v4 address)
-$ isithacked -target 127.0.0.1 -ip
 ```
 
 [godoc-image]: https://pkg.go.dev/badge/fabelx/isithacked?utm_source=godoc

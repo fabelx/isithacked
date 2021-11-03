@@ -11,9 +11,8 @@ func init() {
 
 func main() {
 	cfg := &config.Config{
-		Target: config.Target,
+		Domain: config.Domain,
 		Output: config.Output,
-		IsIp:   config.IsIp,
 	}
 	isithacked.Run(cfg)
 }
